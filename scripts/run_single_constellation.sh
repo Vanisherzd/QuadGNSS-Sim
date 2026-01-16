@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 #
 # Single Constellation Mode for Hardware-Limited SDRs
 # For use with HackRF One (20 MSps max) or other bandwidth-limited devices
@@ -69,7 +69,7 @@ generate_single_sdr_command() {
         "hackrf")
             cat << EOF
 # HackRF Single Constellation Pipeline
-./quadgnss_sdr $SAMPLE_RATE ${FREQ_MHZ}e6 "${GPS_EPHEMERIS}" "${GALILEO_EPHEMERIS}" "${BEIDOU_EPHEMERIS}" "${GLONASS_EPHEMERIS}" 2>/dev/null | \
+../quadgnss_sdr $SAMPLE_RATE ${FREQ_MHZ}e6 "${GPS_EPHEMERIS}" "${GALILEO_EPHEMERIS}" "${BEIDOU_EPHEMERIS}" "${GLONASS_EPHEMERIS}" 2>/dev/null | \
 mbuffer -m 100M | \
 hackrf_transfer -t 1 -s $SAMPLE_RATE -f ${FREQ_MHZ}e6 -a 1 -x 20 -l 32 -g 20
 
@@ -80,7 +80,7 @@ EOF
         "limewsdr")
             cat << EOF
 # LimeSDR Single Constellation Pipeline  
-./quadgnss_sdr $SAMPLE_RATE ${FREQ_MHZ}e6 "${GPS_EPHEMERIS}" "${GALILEO_EPHEMERIS}" "${BEIDOU_EPHEMERIS}" "${GLONASS_EPHEMERIS}" 2>/dev/null | \
+../quadgnss_sdr $SAMPLE_RATE ${FREQ_MHZ}e6 "${GPS_EPHEMERIS}" "${GALILEO_EPHEMERIS}" "${BEIDOU_EPHEMERIS}" "${GLONASS_EPHEMERIS}" 2>/dev/null | \
 mbuffer -m 100M | \
 LimeUtil --tx --freq ${FREQ_MHZ}e6 --rate $SAMPLE_RATE --bandwidth 4e6 --gain 20 --antenna LNAW
 EOF
@@ -88,7 +88,7 @@ EOF
         "usrp")
             cat << EOF
 # USRP Single Constellation Pipeline (overkill but works)
-./quadgnss_sdr $SAMPLE_RATE ${FREQ_MHZ}e6 "${GPS_EPHEMERIS}" "${GALILEO_EPHEMERIS}" "${BEIDOU_EPHEMERIS}" "${GLONASS_EPHEMERIS}" 2>/dev/null | \
+../quadgnss_sdr $SAMPLE_RATE ${FREQ_MHZ}e6 "${GPS_EPHEMERIS}" "${GALILEO_EPHEMERIS}" "${BEIDOU_EPHEMERIS}" "${GLONASS_EPHEMERIS}" 2>/dev/null | \
 mbuffer -m 100M | \
 uhd_siggen -a "TX_BAND_1" -A "TX1" -s $SAMPLE_RATE -t 30 \
     --wire-format sc16 --args "master_clock_rate=$SAMPLE_RATE" \
@@ -98,7 +98,7 @@ EOF
         "bladerf")
             cat << EOF
 # BladeRF Single Constellation Pipeline
-./quadgnss_sdr $SAMPLE_RATE ${FREQ_MHZ}e6 "${GPS_EPHEMERIS}" "${GALILEO_EPHEMERIS}" "${BEIDOU_EPHEMERIS}" "${GLONASS_EPHEMERIS}" 2>/dev/null | \
+../quadgnss_sdr $SAMPLE_RATE ${FREQ_MHZ}e6 "${GPS_EPHEMERIS}" "${GALILEO_EPHEMERIS}" "${BEIDOU_EPHEMERIS}" "${GLONASS_EPHEMERIS}" 2>/dev/null | \
 mbuffer -m 100M | \
 bladerf-cli -t tx -s $SAMPLE_RATE -f ${FREQ_MHZ}e6 -g 15 -b 16 -l 5
 EOF
@@ -125,42 +125,42 @@ main() {
     echo -e "${BLUE}Finding Ephemeris...${NC}"
     case "$constellation" in
         "gps")
-            gps_file=$(find ./data -name "brdc*.n" -o -name "*.nav" 2>/dev/null | head -1)
+            gps_file=$(find ../data -name "brdc*.n" -o -name "*.nav" 2>/dev/null | head -1)
             if [ -n "$gps_file" ]; then
                 export GPS_EPHEMERIS="$gps_file"
-                echo -e "  ${GREEN}✓${NC} GPS: $gps_file"
+                echo -e "  ${GREEN}??{NC} GPS: $gps_file"
             else
-                echo -e "  ${YELLOW}⚠${NC} No GPS ephemeris found"
+                echo -e "  ${YELLOW}??{NC} No GPS ephemeris found"
                 export GPS_EPHEMERIS=""
             fi
             ;;
         "galileo")
-            galileo_file=$(find ./data -name "*galileo*.rnx" 2>/dev/null | head -1)
+            galileo_file=$(find ../data -name "*galileo*.rnx" 2>/dev/null | head -1)
             if [ -n "$galileo_file" ]; then
                 export GALILEO_EPHEMERIS="$galileo_file"
-                echo -e "  ${GREEN}✓${NC} Galileo: $galileo_file"
+                echo -e "  ${GREEN}??{NC} Galileo: $galileo_file"
             else
-                echo -e "  ${YELLOW}⚠${NC} No Galileo ephemeris found"
+                echo -e "  ${YELLOW}??{NC} No Galileo ephemeris found"
                 export GALILEO_EPHEMERIS=""
             fi
             ;;
         "beidou")
-            beidou_file=$(find ./data -name "*beidou*.rnx" 2>/dev/null | head -1)
+            beidou_file=$(find ../data -name "*beidou*.rnx" 2>/dev/null | head -1)
             if [ -n "$beidou_file" ]; then
                 export BEIDOU_EPHEMERIS="$beidou_file"
-                echo -e "  ${GREEN}✓${NC} BeiDou: $beidou_file"
+                echo -e "  ${GREEN}??{NC} BeiDou: $beidou_file"
             else
-                echo -e "  ${YELLOW}⚠${NC} No BeiDou ephemeris found"
+                echo -e "  ${YELLOW}??{NC} No BeiDou ephemeris found"
                 export BEIDOU_EPHEMERIS=""
             fi
             ;;
         "glonass")
-            glonass_file=$(find ./data -name "*glonass*.rnx" 2>/dev/null | head -1)
+            glonass_file=$(find ../data -name "*glonass*.rnx" 2>/dev/null | head -1)
             if [ -n "$glonass_file" ]; then
                 export GLONASS_EPHEMERIS="$glonass_file"
-                echo -e "  ${GREEN}✓${NC} GLONASS: $glonass_file"
+                echo -e "  ${GREEN}??{NC} GLONASS: $glonass_file"
             else
-                echo -e "  ${YELLOW}⚠${NC} No GLONASS ephemeris found"
+                echo -e "  ${YELLOW}??{NC} No GLONASS ephemeris found"
                 export GLONASS_EPHEMERIS=""
             fi
             ;;

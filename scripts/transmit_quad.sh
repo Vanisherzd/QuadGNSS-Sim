@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 
 # QuadGNSS-Sim Transmission Script
 # Author: QuadGNSS-Sim Project
@@ -26,12 +26,12 @@ echo ""
 
 # Pre-calculated frequency offsets for simplicity
 echo -e "${GREEN}Frequency Offsets from Center (${CENTER_FREQ_MHZ} MHz):${NC}"
-echo "  BeiDou B1:  1561.098 MHz → Δf: ${RED}-20.402 MHz${NC} (minimum)"
-echo "  GPS L1:      1575.420 MHz → Δf: ${RED}-6.080 MHz${NC}"
-echo "  Galileo E1:   1575.420 MHz → Δf: ${RED}-6.080 MHz${NC}"
-echo "  GLONASS k=-7: 1598.0625 MHz → Δf: ${GREEN}+16.5625 MHz${NC}"
-echo "  GLONASS k=0:  1602.0000 MHz → Δf: ${GREEN}+20.5000 MHz${NC}"
-echo "  GLONASS k=+6: 1605.3750 MHz → Δf: ${YELLOW}+23.8750 MHz${NC} (maximum)"
+echo "  BeiDou B1:  1561.098 MHz ???f: ${RED}-20.402 MHz${NC} (minimum)"
+echo "  GPS L1:      1575.420 MHz ???f: ${RED}-6.080 MHz${NC}"
+echo "  Galileo E1:   1575.420 MHz ???f: ${RED}-6.080 MHz${NC}"
+echo "  GLONASS k=-7: 1598.0625 MHz ???f: ${GREEN}+16.5625 MHz${NC}"
+echo "  GLONASS k=0:  1602.0000 MHz ???f: ${GREEN}+20.5000 MHz${NC}"
+echo "  GLONASS k=+6: 1605.3750 MHz ???f: ${YELLOW}+23.8750 MHz${NC} (maximum)"
 echo ""
 
 # Bandwidth analysis
@@ -53,43 +53,43 @@ echo -e "${GREEN}Hardware Compatibility Analysis:${NC}"
 echo ""
 
 # USRP (Recommended)
-echo -e "${GREEN}✅ USRP Series (uhd_sink_cfile) - RECOMMENDED${NC}"
+echo -e "${GREEN}??USRP Series (uhd_sink_cfile) - RECOMMENDED${NC}"
 echo "   Sample Rate: Up to 61.44 MSps"
-echo "   Command: ./quadgnss_sdr | uhd_sink_cfile --freq ${CENTER_FREQ_MHZ}e6 --rate ${SAMPLE_RATE_MSPS}e6"
+echo "   Command: ../quadgnss_sdr | uhd_sink_cfile --freq ${CENTER_FREQ_MHZ}e6 --rate ${SAMPLE_RATE_MSPS}e6"
 echo "   Cost: $$1,000-3,000"
-echo "   Status: ✅ OPTIMAL - Professional grade with full bandwidth"
+echo "   Status: ??OPTIMAL - Professional grade with full bandwidth"
 echo ""
 
 # BladeRF (Recommended)
-echo -e "${GREEN}✅ BladeRF 2.0 (bladerf-cli) - RECOMMENDED${NC}"
+echo -e "${GREEN}??BladeRF 2.0 (bladerf-cli) - RECOMMENDED${NC}"
 echo "   Sample Rate: Up to 61.44 MSps"
 echo "   Command: ./quadgnass_sdr | bladerf-cli -t tx -s ${SAMPLE_RATE_MSPS}e6 -f ${CENTER_FREQ_MHZ}e6"
 echo "   Cost: $$400-600"
-echo "   Status: ✅ OPTIMAL - Good performance, reasonable cost"
+echo "   Status: ??OPTIMAL - Good performance, reasonable cost"
 echo ""
 
 # LimeSDR (Recommended)
-echo -e "${GREEN}✅ LimeSDR (LimeUtil) - RECOMMENDED${NC}"
+echo -e "${GREEN}??LimeSDR (LimeUtil) - RECOMMENDED${NC}"
 echo "   Sample Rate: Up to 61.44 MSps"
 echo "   Command: ./quadgnass_sdr | LimeUtil --freq ${CENTER_FREQ_MHZ}e6 --rate ${SAMPLE_RATE_MSPS}e6"
 echo "   Cost: $$300-500"
-echo "   Status: ✅ OPTIMAL - Good performance, open-source"
+echo "   Status: ??OPTIMAL - Good performance, open-source"
 echo ""
 
 # HackRF (Not Recommended)
 HACKRF_RATE_MSPS=20
 HACKRF_MAX_FREQ_MHZ=10
-echo -e "${RED}❌ HackRF One (hackrf_transfer) - NOT RECOMMENDED${NC}"
+echo -e "${RED}??HackRF One (hackrf_transfer) - NOT RECOMMENDED${NC}"
 echo "   Sample Rate: ${HACKRF_RATE_MSPS} MSps"
 echo "   Max Frequency: ${HACKRF_MAX_FREQ_MHZ} MHz (Nyquist limited)"
 echo "   Required: ${TOTAL_SPAN_MHZ} MHz span"
-echo "   Command: ./quadgnss_sdr | hackrf_transfer -f ${CENTER_FREQ_MHZ}e6 -s ${HACKRF_RATE_MSPS}e6"
+echo "   Command: ../quadgnss_sdr | hackrf_transfer -f ${CENTER_FREQ_MHZ}e6 -s ${HACKRF_RATE_MSPS}e6"
 echo "   Cost: $$300"
-echo "   Status: ❌ INADEQUATE - Will cause signal corruption"
+echo "   Status: ??INADEQUATE - Will cause signal corruption"
 echo ""
 
 # Signal aliasing explanation
-echo -e "${RED}⚠️  SIGNAL ALIASING WARNING FOR HACKRF${NC}"
+echo -e "${RED}??  SIGNAL ALIASING WARNING FOR HACKRF${NC}"
 echo ""
 echo -e "${YELLOW}Why ${HACKRF_RATE_MSPS} MSps is Inadequate:${NC}"
 echo "  Nyquist Theory: Max frequency capture = Sample Rate / 2"
@@ -120,14 +120,14 @@ echo ""
 
 # Performance comparison table
 echo -e "${GREEN}Performance Comparison:${NC}"
-echo -e "${BLUE}┌─────────────────────────────────────────────────────────────────┐${NC}"
-echo -e "${BLUE}│ Sample Rate │ Bandwidth Covered │ Signal Quality │ Hardware Cost │ Recommendation │${NC}"
-echo -e "${BLUE}├─────────────────────────────────────────────────────────────────┤${NC}"
-echo -e "${RED}│ 20 MSps     │ 10 MHz            │ Severely Corrupted │ Low           │ ❌ DO NOT USE │${NC}"
-echo -e "${YELLOW}│ 40 MSps     │ 20 MHz            │ Partially Corrupted │ Medium        │ ⚠️  MINIMAL    │${NC}"
-echo -e "${GREEN}│ 61.44 MSps  │ 30.72 MHz          │ Good             │ Medium-High   │ ✅ RECOMMENDED │${NC}"
-echo -e "${GREEN}│ 100 MSps    │ 50 MHz            │ Excellent        │ High          │ ✅ OPTIMAL     │${NC}"
-echo -e "${BLUE}└─────────────────────────────────────────────────────────────────┘${NC}"
+echo -e "${BLUE}????????????????????????????????????????????????????????????????????{NC}"
+echo -e "${BLUE}??Sample Rate ??Bandwidth Covered ??Signal Quality ??Hardware Cost ??Recommendation ??{NC}"
+echo -e "${BLUE}????????????????????????????????????????????????????????????????????{NC}"
+echo -e "${RED}??20 MSps     ??10 MHz            ??Severely Corrupted ??Low           ????DO NOT USE ??{NC}"
+echo -e "${YELLOW}??40 MSps     ??20 MHz            ??Partially Corrupted ??Medium        ????  MINIMAL    ??{NC}"
+echo -e "${GREEN}??61.44 MSps  ??30.72 MHz          ??Good             ??Medium-High   ????RECOMMENDED ??{NC}"
+echo -e "${GREEN}??100 MSps    ??50 MHz            ??Excellent        ??High          ????OPTIMAL     ??{NC}"
+echo -e "${BLUE}????????????????????????????????????????????????????????????????????{NC}"
 echo ""
 
 # Check for available binaries
@@ -214,7 +214,7 @@ g++ -std=c++17 -O3 -pthread src/main.cpp -o quadgnss_sdr 2>/dev/null || {
     exit 1
 }
 
-echo -e "${GREEN}✅ Compilation successful!${NC}"
+echo -e "${GREEN}??Compilation successful!${NC}"
 echo ""
 
 # Check if user wants to transmit now
@@ -260,7 +260,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "Please install: USRP, BladeRF 2.0, or LimeSDR"
         echo ""
         echo -e "${YELLOW}Alternatively, save to file:${NC}"
-        echo "./quadgnss_sdr > output.iq"
+        echo "../quadgnss_sdr > output.iq"
         echo ""
         echo -e "${GREEN}Starting file output...${NC}"
         timeout 10s ./quadgnass_sdr > output.iq || true
